@@ -39,6 +39,8 @@ Benefits:
   - Discrete positions (0, 1, 2...) don’t work well with gradient-based learning.
   - Solution: Use continuous positional encodings (like sinusoids).
   - This way, the model can learn order-sensitive patterns using smooth functions.
+ 
+  ![My diagram](assets/transformers/fig1.png)
 
 ## 5. Injecting Order: How Positional Encoding Brings Back Sequence Awareness
 
@@ -54,8 +56,7 @@ This way:
 - Similar positions have similar encodings (which helps learning).
 - These vectors are added to the original word embeddings.
 
-![My diagram](assets/bam/fig1.png)
-![My diagram](assets/bam/fig2.png)
+![My diagram](assets/transformers/fig2.png)
 
 ## 6. Understanding Relationships: The Heart of Self-Attention
 
