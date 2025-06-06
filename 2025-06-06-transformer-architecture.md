@@ -54,6 +54,9 @@ This way:
 - Similar positions have similar encodings (which helps learning).
 - These vectors are added to the original word embeddings.
 
+![My diagram](assets/bam/fig1.png)
+![My diagram](assets/bam/fig2.png)
+
 ## 6. Understanding Relationships: The Heart of Self-Attention
 
 Let’s go deeper into how the model actually learns relationships between words.
