@@ -118,7 +118,7 @@ Just like that, in self-attention:
 And the best part?
 All of this can be done in parallel for every word — no recurrence, no sequential loops. That's the foundation of the transformer's speed and power.
 
-## 7.From One to Many: Multi-Head Self-Attention
+## 7. From One to Many: Multi-Head Self-Attention
 
 So far, we’ve discussed how self-attention models relationships between every pair of tokens.
 
