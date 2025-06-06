@@ -118,7 +118,7 @@ Just like that, in self-attention:
 And the best part?
 All of this can be done in parallel for every word — no recurrence, no sequential loops. That's the foundation of the transformer's speed and power.
 
-## From One to Many: Multi-Head Self-Attention
+## 7.From One to Many: Multi-Head Self-Attention
 
 So far, we’ve discussed how self-attention models relationships between every pair of tokens.
 
@@ -147,7 +147,7 @@ Finally:
 
 “It’s like having multiple sets of eyes — each head looks at the sentence differently and notices a unique kind of relationship.”
 
-## The Full Picture: Encoder-Decoder Architecture
+## 8. The Full Picture: Encoder-Decoder Architecture
 The original transformer model in the paper is split into two main parts:
 
 🧱 Encoder
@@ -164,7 +164,7 @@ The original transformer model in the paper is split into two main parts:
 
 This is the classic encoder-decoder pattern also used in machine translation (e.g., English → French).
 
-9. Putting It All Together: The Stack
+## 9. Putting It All Together: The Stack
 In the paper, each encoder and decoder consists of N = 6 layers (referred to as Nx in the diagram).
 
 Each encoder block contains:
