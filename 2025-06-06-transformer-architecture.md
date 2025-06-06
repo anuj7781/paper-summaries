@@ -180,6 +180,53 @@ And one key insight:
 - GPT only uses the decoder stack (autoregressive).
 - BERT only uses the encoder stack (bidirectional).
 
+## 🔒 10. What Makes the Decoder Different? Enter Masked Self-Attention
+
+So far, we’ve seen that both encoder and decoder blocks use multi-head self-attention followed by a feed-forward network. But there's a key difference:
+
+The decoder is autoregressive — meaning it generates each word based only on the past tokens.
+
+This is crucial for language generation tasks like ChatGPT.
+
+➤ Why Masking Is Needed
+Let’s take this incomplete sentence:
+
+_“Anuj works __ _.”
+
+While training, we know the true answer is “at Samsung”.
+But when the model is generating it word-by-word, we want it to:
+
+- Predict “at” using only: “Anuj works”
+- Predict “Samsung” using only: “Anuj works at”
+
+❌ No Peeking into the Future!
+
+The decoder must not look at future tokens during training. Otherwise, it’s cheating.
+That’s where masked attention comes in.
+
+➤ How Masking Works:
+
+In the self-attention score matrix, we:
+- Compute Q · Kᵀ / √d
+- Then mask the upper diagonal (future tokens) by adding -∞ to those positions.
+- Finally apply softmax.
+
+Since softmax(-∞) = 0, the attention to future tokens gets zeroed out.
+
+🎯 Effect:
+
+- Each word in the decoder can only attend to itself and previous words.
+- Just like how you would write a sentence one word at a time, without seeing what comes next.
+
+🔁 Encoder vs Decoder: The Key Difference
+
+| Feature            | Encoder                    | Decoder                          |
+|--------------------|----------------------------|----------------------------------|
+| Self-Attention     | Normal (bidirectional)     | Masked (only past allowed)       |
+| Input Dependency   | Entire input sequence      | Only previously generated words  |
+| Purpose            | Understand input           | Generate output one word at a time |
+
+
 ✅ Summary: Why This Changed Everything
 
 - Parallelism: Attention replaces recurrence — faster and more scalable.
