@@ -113,3 +113,72 @@ Just like that, in self-attention:
 
 And the best part?
 All of this can be done in parallel for every word — no recurrence, no sequential loops. That's the foundation of the transformer's speed and power.
+
+## From One to Many: Multi-Head Self-Attention
+
+So far, we’ve discussed how self-attention models relationships between every pair of tokens.
+
+But real language is complex — consider this example:
+
+“Naveen gave Satish a beautiful bike on his birthday.”
+
+Here, multiple relationships must be learned:
+ - What is being given? → bike
+ - Who gave the bike? → Naveen
+ - Who received it? → Satish
+ - When was it given? → birthday
+
+This means: one attention matrix isn’t enough.
+
+➤ Multi-Head Attention to the Rescue
+
+Instead of learning just one self-attention pattern, the transformer learns multiple self-attention matrices, each capturing a different kind of relationship.
+
+- Think of it like CNNs: we don't hand-code filters to detect edges.
+- We start with N random filters, and the model learns the patterns that matter.
+- Similarly, in transformers, each "head" in multi-head attention starts with random weights and learns a unique relational focus.
+
+Finally:
+- Outputs from each attention head are concatenated and combined linearly to get the full picture.
+
+“It’s like having multiple sets of eyes — each head looks at the sentence differently and notices a unique kind of relationship.”
+
+## The Full Picture: Encoder-Decoder Architecture
+The original transformer model in the paper is split into two main parts:
+
+🧱 Encoder
+
+- Converts input tokens into vector representations.
+- Focuses on understanding the entire input sequence and learning its relationships.
+
+🧱 Decoder
+
+- Uses these vectors to generate output tokens, one at a time.
+- Predicts the next word by attending to both:
+  - Previously generated outputs.
+  - Encoder outputs.
+
+This is the classic encoder-decoder pattern also used in machine translation (e.g., English → French).
+
+9. Putting It All Together: The Stack
+In the paper, each encoder and decoder consists of N = 6 layers (referred to as Nx in the diagram).
+
+Each encoder block contains:
+
+- Multi-head self-attention
+- Feed-forward network
+- Skip connections (residuals) — to preserve original input signals.
+- Layer normalization
+
+“Skip connections ensure that even after multiple complex transformations, the model doesn’t forget the original input.”
+
+And one key insight:
+- GPT only uses the decoder stack (autoregressive).
+- BERT only uses the encoder stack (bidirectional).
+
+✅ Summary: Why This Changed Everything
+
+- Parallelism: Attention replaces recurrence — faster and more scalable.
+- Context: Global relationships are modeled directly.
+- Modularity: Stacking layers and attention heads makes it flexible.
+- Generalization: The same building blocks power BERT, GPT, Gemini, Claude, etc.
