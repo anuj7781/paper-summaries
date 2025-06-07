@@ -154,6 +154,23 @@ In autoregressive LLM inference, each new token needs to attend to all previous 
 
 ## 📚 References
 
+## 📚 Key Reads on AI Storage and Memory Bottlenecks
+
+### 1. [AI and Memory Wall – Amir Gholami et al.](https://arxiv.org/abs/2403.14123)
+- **Summary**: This paper discusses how memory bandwidth has become a primary bottleneck in AI applications, especially for transformer models. It highlights the disparity between the rapid growth of compute capabilities and the slower advancement of memory technologies, leading to a "memory wall" that hampers performance.
+
+### 2. [Data Movement Bottlenecks to Large-Scale Model Training – Epoch AI](https://epoch.ai/blog/data-movement-bottlenecks-scaling-past-1e28-flop)
+- **Summary**: This blog post analyzes the challenges of data movement in large-scale model training. It identifies intra-GPU and inter-GPU data transfers as significant bottlenecks and discusses the concept of a "latency wall" that limits scaling.
+
+### 3. [Understanding Data Storage and Ingestion for Large-Scale Deep Recommendation Model Training – Mark Zhao et al.](https://arxiv.org/abs/2108.09373)
+- **Summary**: This paper presents Meta's data storage and ingestion pipeline for training deep recommendation models. It details the architecture, challenges, and optimizations involved in handling vast amounts of training data efficiently.
+
+### 4. [Stop Wasting Money on AI Storage – Lightbits Labs](https://www.lightbitslabs.com/blog/stop-wasting-money-on-ai-storage-a-smarter-leaner-approach/)
+- **Summary**: This blog critiques the use of traditional parallel file systems for AI training workloads. It argues that such systems, while powerful, may be overkill and not cost-effective for AI applications, suggesting alternative storage strategies.
+
+### 5. [Solving AI's Bottlenecks – IQT](https://www.iqt.org/library/solving-ais-bottlenecks---the-critical-role-of-physical-and-software-layers)
+- **Summary**: This article discusses the challenges in AI workloads related to storage and memory. It emphasizes the need for advancements in memory technologies and software optimizations to overcome current bottlenecks.
+
 
 ---
 
