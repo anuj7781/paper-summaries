@@ -153,7 +153,7 @@ In autoregressive LLM inference, each new token needs to attend to all previous 
 ---
 ## 🧪 Next Steps: Emulating LLM Storage Pressure Without GPUs
 
-(Note : I need to cross check the sources and proposed benchmarks myself)
+**Note : I need to cross check the sources and proposed benchmarks myself**
 
 You don’t need GPUs to understand where LLM workloads stress the storage stack. The following open-source tools can simulate key I/O and memory behaviors relevant to model training and inference:
 
@@ -169,7 +169,7 @@ You don’t need GPUs to understand where LLM workloads stress the storage stack
 
 ## 🤔 Why Not MLPerf for Storage Testing?
 
-(Note : I need to cross check this part)
+**Note : I need to cross check this part**
 
 [MLPerf](https://mlcommons.org/en/) is the industry standard for benchmarking ML performance. However, it may not be the best tool for analyzing storage and memory bottlenecks in a CPU-only or dev test environment.
 
