@@ -208,9 +208,19 @@ A good next step good be finding blogs/papers that talk about memory/storage pro
 ### 4. [Stop Wasting Money on AI Storage – Lightbits Labs](https://www.lightbitslabs.com/blog/stop-wasting-money-on-ai-storage-a-smarter-leaner-approach/)
 - **Summary**: This blog critiques the use of traditional parallel file systems for AI training workloads. It argues that such systems, while powerful, may be overkill and not cost-effective for AI applications, suggesting alternative storage strategies.
 
-### 5. [Solving AI's Bottlenecks – IQT](https://www.iqt.org/library/solving-ais-bottlenecks---the-critical-role-of-physical-and-software-layers)
-- **Summary**: This article discusses the challenges in AI workloads related to storage and memory. It emphasizes the need for advancements in memory technologies and software optimizations to overcome current bottlenecks.
+### 5. [Checkpointing Efficiency is a Critical Blocker to AI Productivity – DDN](https://www.ddn.com/resources/whitepapers/checkpointing-efficiency-is-a-critical-blocker-to-ai-productivity/)
+- **Summary**: This whitepaper discusses how frequent and large checkpoint operations in LLM training can become a serious bottleneck. It highlights:
+  - Bursty sequential write workloads
+  - fsync and flush pressure
+  - Trade-offs in using local SSDs vs distributed storage (like NFS or Lustre)
+  - The importance of sharding, async flushes, and tiered storage designs to reduce downtime and improve training throughput
 
+### 6. [Building Meta’s GenAI Infrastructure – Meta Engineering Blog](https://engineering.fb.com/2024/03/12/data-center-engineering/building-metas-genai-infrastructure/)
+- **Summary**: Meta shares details of their GenAI infrastructure, including:
+  - The need to build custom storage infrastructure to handle model checkpoints, datasets, and model rollout at scale
+  - Use of a home-grown FUSE-based API for dataset access
+  - Backend storage system based on Meta’s internal “Tectonic” file system optimized for Flash
+  - Emphasis on storage availability, bandwidth, and latency as first-class concerns in AI model development
 
 ---
 
