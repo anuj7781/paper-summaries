@@ -8,7 +8,7 @@ In this blog, we look at LLMs not just as machine learning artifacts, but as **d
 
 ## 1. Memory and Storage Demands of Full LLM Training
 
-Let’s say you're training a 10B parameter LLM using FP16 precision:
+Let’s say you're training a 10 Billion parameters LLM using FP16 precision:
 
 | Component              | Memory Usage |
 |------------------------|--------------|
@@ -80,7 +80,7 @@ Training datasets like The Pile or OpenWebText can be hundreds of GBs or even TB
 
 ---
 
-## 5. Optimizer Offloading
+## 5. Bottleneck #3: Optimizer Offloading
 
 ### 💡 Optimizer Offloading Explained
 
@@ -121,7 +121,7 @@ While optimizer offloading helps reduce GPU memory usage, it introduces I/O and 
 
 
 ---
-### 🧠 KV Cache (Key-Value Cache): Workload Characteristics
+### 🧠 Bottleneck #4: KV Cache (Key-Value Cache)
 
 In autoregressive LLM inference, each new token needs to attend to all previous tokens. To avoid recomputing attention for the entire sequence repeatedly, models use a **KV cache** — storing key and value vectors layer-wise for every token generated.
 
@@ -149,6 +149,46 @@ In autoregressive LLM inference, each new token needs to attend to all previous 
 | **I/O Characteristics**  | Sustained read, random access (data); sequential read (model) | Sequential, bursty writes     | Frequent small R/W                                         | In-memory access only                             |
 | **Optimization Methods** | Dataloader prefetch, caching, model sharding  | Sharding, async writes                    | ZeRO, DeepSpeed, FSDP                                      | KV cache quantization, sliding window attention   |
 | **Storage Bottleneck**   | Metadata lookup, read throughput              | High write throughput, fsync overhead     | PCIe/memory bandwidth, SSD latency                         | GPU HBM memory pressure, prompt length scaling     |
+
+---
+## 🧪 Next Steps: Emulating LLM Storage Pressure Without GPUs
+
+(Note : I need to cross check the sources and proposed benchmarks myself)
+
+You don’t need GPUs to understand where LLM workloads stress the storage stack. The following open-source tools can simulate key I/O and memory behaviors relevant to model training and inference:
+
+### 🔸 [Fugaku LLM I/O Benchmark](https://github.com/riken-rccs/fugaku-llm-benchmark)
+- Developed by RIKEN for exascale research.
+- Emulates checkpointing, parameter sharding, and optimizer offload patterns for LLM-scale models.
+- Useful for profiling **write bursts**, **fsync behavior**, and **I/O scalability** on NVMe or NFS setups.
+
+### 🔸 [DeepIO](https://github.com/alibaba/DeepIO)
+- Built by Alibaba Cloud for large-scale recommendation and LLM workloads.
+- Profiles **training data ingestion**, **shuffling**, and **dataloader cache behavior**.
+- Supports plug-and-play deployment on CPU-only clusters.
+
+## 🤔 Why Not MLPerf for Storage Testing?
+
+(Note : I need to cross check this part)
+
+[MLPerf](https://mlcommons.org/en/) is the industry standard for benchmarking ML performance. However, it may not be the best tool for analyzing storage and memory bottlenecks in a CPU-only or dev test environment.
+
+Here’s why:
+
+| Limitation                  | Explanation                                                                 |
+|----------------------------|-----------------------------------------------------------------------------|
+| **GPU-Centric**            | Designed for benchmarking with GPUs like A100s or TPUs — not CPU-only setups. |
+| **Heavy Dependencies**     | Requires CUDA, NCCL, cuDNN, and other vendor-optimized libraries.           |
+| **Not Modular for Storage**| Focuses on overall throughput, not isolating disk/memory impact.            |
+| **High Resource Demand**   | Even a single BERT benchmark requires 100+ GB RAM, fast SSD, and multiple GPUs. |
+| **Storage Benchmark Immature** | MLPerf Storage is still evolving and not widely adopted.                     |
+
+### ✅ What You *Can* Do
+- Study the [MLPerf benchmark specs](https://github.com/mlcommons/training) to understand typical I/O behavior.
+- Use `strace`, `blktrace`, or `perf` to trace I/O on CPU-mode runs.
+- Reproduce checkpoint/data ingestion I/O using `fio` or tools like [Fugaku](https://github.com/riken-rccs/fugaku-llm-benchmark) and [DeepIO](https://github.com/alibaba/DeepIO).
+
+> MLPerf is best as a **reference** or **target workload**, but not a direct test tool for isolated storage benchmarking — yet.
 
 ---
 
