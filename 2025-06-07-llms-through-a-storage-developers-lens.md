@@ -216,7 +216,7 @@ A good next step good be finding blogs/papers that talk about memory/storage pro
   - Backend storage system based on Meta’s internal “Tectonic” file system optimized for Flash
   - Emphasis on storage availability, bandwidth, and latency as first-class concerns in AI model development
 
-  ### 5. [AI and Memory Wall – Amir Gholami et al.](https://arxiv.org/abs/2403.14123)
+### 5. [AI and Memory Wall – Amir Gholami et al.](https://arxiv.org/abs/2403.14123)
 - **Summary**: This paper discusses how memory bandwidth has become a primary bottleneck in AI applications, especially for transformer models. It highlights the disparity between the rapid growth of compute capabilities and the slower advancement of memory technologies, leading to a "memory wall" that hampers performance.
 
 ---
