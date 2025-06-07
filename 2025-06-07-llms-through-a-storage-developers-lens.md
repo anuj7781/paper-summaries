@@ -121,6 +121,23 @@ While optimizer offloading helps reduce GPU memory usage, it introduces I/O and 
 
 
 ---
+### 🧠 KV Cache (Key-Value Cache): Workload Characteristics
+
+In autoregressive LLM inference, each new token needs to attend to all previous tokens. To avoid recomputing attention for the entire sequence repeatedly, models use a **KV cache** — storing key and value vectors layer-wise for every token generated.
+
+| Characteristic         | Description                                                                 |
+|------------------------|-----------------------------------------------------------------------------|
+| **Access Pattern**     | Repeated in-memory lookups and appends (per token generated)                |
+| **I/O Granularity**    | Fine-grained — per token, per attention head, per layer                     |
+| **Frequency**          | Every inference step (each new token)                                       |
+| **Latency Sensitivity**| Very High — any delay directly increases token generation latency           |
+| **Bandwidth Usage**    | High GPU HBM bandwidth (all attention heads access cache in parallel)       |
+| **Storage Medium**     | GPU HBM (or shared memory in multi-query models)                            |
+| **Caching Strategy**   | Append-only, fast indexed access; paged memory for long prompts (if needed) |
+
+> 📌 Note: KV Cache is typically not stored on disk — it creates pressure on GPU memory, not persistent storage.
+
+---
 # 6. Summary
 
 | Feature                  | Model/Data Loading                            | Checkpointing                            | Optimizer Offloading                                      | KV Cache (Inference)                             |
