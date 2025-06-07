@@ -1,4 +1,3 @@
-
 # LLMs Through a Storage Developer’s Lens
 
 As a system software or storage developer, you're probably used to thinking about throughput, caching, IOPS, and memory pressure. What you may not realize is that these concerns apply directly to working with **Large Language Models (LLMs)**. This includes training, fine-tuning, and even inference.
@@ -55,6 +54,35 @@ During training (or fine-tuning), models are periodically saved to disk:
 - High **write IOPS** demand if using local SSD
 - High **latency** if using network FS (e.g., NFS, S3)
 
+
+---
+
+## 4. Storage Bottleneck #2: Data Loading
+
+Training datasets like The Pile or OpenWebText can be hundreds of GBs or even TBs. These datasets are often stored on disk in formats like `.jsonl`, `.txt`, or `webdataset` tar archives.
+
+### ⚙️ How it works:
+- Data is read from disk → decoded → tokenized → batched.
+- Modern pipelines cache data in **CPU RAM** or use **streaming prefetch** to avoid GPU starvation.
+
+### 💾 Storage workload characteristics:
+- **Random reads** (depending on shuffle strategy).
+- Throughput-sensitive to avoid GPU underutilization.
+- Benefits from **parallel I/O** and **prefetching** (e.g., `DataLoader(num_workers=N)`).
+
+---
+
+## 5. Cached Activations and Activation Checkpointing
+
+During training, intermediate layer outputs (activations) must be stored to compute gradients during backpropagation.
+
+### 🧠 Problem:
+- These cached activations can consume **more memory than the model weights themselves**.
+
+### 🧪 Solutions:
+- **Activation Checkpointing**: Recompute intermediate activations during the backward pass instead of storing them all.
+- **Tradeoff**: Saves memory, but increases compute.
+
 ---
 
 ## 6. Optimizer Offloading
@@ -67,6 +95,33 @@ Optimizers like Adam store **3× parameter state**. When GPU memory is tight:
 | NVMe SSD       | **High R/W IOPS**  | Offloads memory but adds storage stress  |
 
 Frameworks like **DeepSpeed ZeRO Stage 2/3** offload optimizer and even model weights to disk. This converts LLM training into a **storage-bound workload**.
+
+
+---
+
+## 🔍 Checkpointing vs Cached Activations
+
+These two are often confused but serve very different roles in training:
+
+| Feature              | Checkpointing                     | Cached Activations              |
+|----------------------|------------------------------------|----------------------------------|
+| Purpose              | Save training state to disk        | Enable gradient computation      |
+| Frequency            | Every N steps/epochs               | Every batch                      |
+| Location             | Disk (SSD, S3, etc.)               | GPU/CPU memory                   |
+| Affects              | I/O throughput and capacity        | Memory footprint and compute     |
+| Optimization tactic  | Shard checkpoints, async I/O       | Activation checkpointing         |
+
+### 🔁 Checkpointing
+- **What**: Model weights, optimizer state, sometimes gradients
+- **Why**: Resume training after crash, track progress
+- **Storage**: Persistent — written to SSD, NFS, or S3
+
+### 🧠 Cached Activations
+- **What**: Layer outputs needed during backprop
+- **Why**: Required for computing gradients
+- **Storage**: Volatile — stored in GPU/CPU memory
+- **Optimization**: Activation checkpointing trades memory for compute
+
 
 ---
 
