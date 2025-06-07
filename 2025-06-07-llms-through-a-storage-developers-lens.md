@@ -196,31 +196,29 @@ Here’s why:
 
 A good next step good be finding blogs/papers that talk about memory/storage problems for LLMs. I found some, but need to go through these.
 
-### 1. [AI and Memory Wall – Amir Gholami et al.](https://arxiv.org/abs/2403.14123)
-- **Summary**: This paper discusses how memory bandwidth has become a primary bottleneck in AI applications, especially for transformer models. It highlights the disparity between the rapid growth of compute capabilities and the slower advancement of memory technologies, leading to a "memory wall" that hampers performance.
-
-### 2. [Data Movement Bottlenecks to Large-Scale Model Training – Epoch AI](https://epoch.ai/blog/data-movement-bottlenecks-scaling-past-1e28-flop)
-- **Summary**: This blog post analyzes the challenges of data movement in large-scale model training. It identifies intra-GPU and inter-GPU data transfers as significant bottlenecks and discusses the concept of a "latency wall" that limits scaling.
-
-### 3. [Understanding Data Storage and Ingestion for Large-Scale Deep Recommendation Model Training – Mark Zhao et al.](https://arxiv.org/abs/2108.09373)
+### 1. [Understanding Data Storage and Ingestion for Large-Scale Deep Recommendation Model Training – Mark Zhao et al.](https://arxiv.org/abs/2108.09373)
 - **Summary**: This paper presents Meta's data storage and ingestion pipeline for training deep recommendation models. It details the architecture, challenges, and optimizations involved in handling vast amounts of training data efficiently.
 
-### 4. [Stop Wasting Money on AI Storage – Lightbits Labs](https://www.lightbitslabs.com/blog/stop-wasting-money-on-ai-storage-a-smarter-leaner-approach/)
+### 2. [Stop Wasting Money on AI Storage – Lightbits Labs](https://www.lightbitslabs.com/blog/stop-wasting-money-on-ai-storage-a-smarter-leaner-approach/)
 - **Summary**: This blog critiques the use of traditional parallel file systems for AI training workloads. It argues that such systems, while powerful, may be overkill and not cost-effective for AI applications, suggesting alternative storage strategies.
 
-### 5. [Checkpointing Efficiency is a Critical Blocker to AI Productivity – DDN](https://www.ddn.com/resources/whitepapers/checkpointing-efficiency-is-a-critical-blocker-to-ai-productivity/)
+### 3. [Checkpointing Efficiency is a Critical Blocker to AI Productivity – DDN](https://www.ddn.com/resources/whitepapers/checkpointing-efficiency-is-a-critical-blocker-to-ai-productivity/)
 - **Summary**: This whitepaper discusses how frequent and large checkpoint operations in LLM training can become a serious bottleneck. It highlights:
   - Bursty sequential write workloads
   - fsync and flush pressure
   - Trade-offs in using local SSDs vs distributed storage (like NFS or Lustre)
   - The importance of sharding, async flushes, and tiered storage designs to reduce downtime and improve training throughput
 
-### 6. [Building Meta’s GenAI Infrastructure – Meta Engineering Blog](https://engineering.fb.com/2024/03/12/data-center-engineering/building-metas-genai-infrastructure/)
+### 4. [Building Meta’s GenAI Infrastructure – Meta Engineering Blog](https://engineering.fb.com/2024/03/12/data-center-engineering/building-metas-genai-infrastructure/)
 - **Summary**: Meta shares details of their GenAI infrastructure, including:
   - The need to build custom storage infrastructure to handle model checkpoints, datasets, and model rollout at scale
   - Use of a home-grown FUSE-based API for dataset access
   - Backend storage system based on Meta’s internal “Tectonic” file system optimized for Flash
   - Emphasis on storage availability, bandwidth, and latency as first-class concerns in AI model development
+
+  ### 5. [AI and Memory Wall – Amir Gholami et al.](https://arxiv.org/abs/2403.14123)
+- **Summary**: This paper discusses how memory bandwidth has become a primary bottleneck in AI applications, especially for transformer models. It highlights the disparity between the rapid growth of compute capabilities and the slower advancement of memory technologies, leading to a "memory wall" that hampers performance.
+
 
 ---
 
