@@ -121,7 +121,7 @@ While optimizer offloading helps reduce GPU memory usage, it introduces I/O and 
 
 
 ---
-### 🧠 Bottleneck #4: KV Cache (Key-Value Cache)
+## 6. 🧠 Bottleneck #4: KV Cache (Key-Value Cache)
 
 In autoregressive LLM inference, each new token needs to attend to all previous tokens. To avoid recomputing attention for the entire sequence repeatedly, models use a **KV cache** — storing key and value vectors layer-wise for every token generated.
 
@@ -138,7 +138,7 @@ In autoregressive LLM inference, each new token needs to attend to all previous 
 > 📌 Note: KV Cache is typically not stored on disk — it creates pressure on GPU memory, not persistent storage.
 
 ---
-# 6. Summary
+## 7. Summary
 
 | Feature                  | Model/Data Loading                            | Checkpointing                            | Optimizer Offloading                                      | KV Cache (Inference)                             |
 |--------------------------|-----------------------------------------------|-------------------------------------------|------------------------------------------------------------|---------------------------------------------------|
@@ -192,7 +192,7 @@ Here’s why:
 
 ---
 
-## 📚 Key Reads on AI Storage and Memory Bottlenecks
+## 8. 📚 Key Reads on AI Storage and Memory Bottlenecks
 
 A good next step good be finding blogs/papers that talk about memory/storage problems for LLMs. I found some, but need to go through these.
 
@@ -218,7 +218,6 @@ A good next step good be finding blogs/papers that talk about memory/storage pro
 
   ### 5. [AI and Memory Wall – Amir Gholami et al.](https://arxiv.org/abs/2403.14123)
 - **Summary**: This paper discusses how memory bandwidth has become a primary bottleneck in AI applications, especially for transformer models. It highlights the disparity between the rapid growth of compute capabilities and the slower advancement of memory technologies, leading to a "memory wall" that hampers performance.
-
 
 ---
 
