@@ -152,9 +152,9 @@ In autoregressive LLM inference, each new token needs to attend to all previous 
 
 ---
 
-## 📚 References
-
 ## 📚 Key Reads on AI Storage and Memory Bottlenecks
+
+A good next step good be finding blogs/papers that talk about memory/storage problems for LLMs. I found some, but need to go through these.
 
 ### 1. [AI and Memory Wall – Amir Gholami et al.](https://arxiv.org/abs/2403.14123)
 - **Summary**: This paper discusses how memory bandwidth has become a primary bottleneck in AI applications, especially for transformer models. It highlights the disparity between the rapid growth of compute capabilities and the slower advancement of memory technologies, leading to a "memory wall" that hampers performance.
