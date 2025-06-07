@@ -1,7 +1,7 @@
 
 # LLMs Through a Storage Developer’s Lens
 
-As a system software or storage developer, you're probably used to thinking about throughput, caching, IOPS, and memory pressure.What you may not realize is that these concerns apply directly to working with **Large Language Models (LLMs)**. This includes training, fine-tuning, and even inference.
+As a system software or storage developer, you're probably used to thinking about throughput, caching, IOPS, and memory pressure. What you may not realize is that these concerns apply directly to working with **Large Language Models (LLMs)**. This includes training, fine-tuning, and even inference.
 
 In this blog, we look at LLMs not just as machine learning artifacts, but as **data-intensive, memory-hungry, storage-stressing system workloads**.
 
