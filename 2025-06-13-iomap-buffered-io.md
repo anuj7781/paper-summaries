@@ -67,6 +67,7 @@ Logical Range:   0MB      10MB     20MB      30MB     40MB      50MB
 Region Type:
 [MAPPED] [ HOLE ] [UNWRITTEN] [DELALLOC] [INLINE]
 
+```
 Physical Disk Blocks Allocation:
 
 - MAPPED: Extent allocated, disk blocks assigned, valid data present.
@@ -128,7 +129,7 @@ Key Notes
 8️⃣ Write returns to user successfully
 
 9️⃣ Background writeback flushes dirty folios via iomap_writepages()
-```
+
 
 ## Page Cache Layout
 
