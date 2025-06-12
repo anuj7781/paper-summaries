@@ -1,8 +1,6 @@
 
 # Deep Dive into IOMAP Buffered I/O Path in Linux Filesystem Stack
 
-*Author: Anuj Gupta*
-
 ---
 
 ## Introduction
@@ -36,60 +34,47 @@ IOMAP abstracts these complexities and allows filesystems like XFS, ext4, F2FS, 
 - Everything else (buffered write, read, writeback, dirty marking, zeroing etc.) is handled generically via IOMAP core.
 
 ---
+### Combined IOMAP State Model
 
-## Extent vs Disk Block — Mental Model
-
-| Term        | Meaning                                                      |
-| ----------- | ------------------------------------------------------------- |
-| **Extent**  | Logical mapping: `{ file_offset, length, disk_block_start }`  |
-| **Disk Block** | Physical sector number (LBA on disk)                       |
-
-> Extent maps file offset ranges to physical disk blocks.
-
----
-
-## The IOMAP Types — Logical State Machine
-
-| IOMAP Type     | Extent Allocated? | Disk Blocks Reserved? | Data Valid? |
-| -------------- | ----------------- | ---------------------- | ------------ |
-| `IOMAP_MAPPED` | ✅ Yes            | ✅ Yes                 | ✅ Yes       |
-| `IOMAP_UNWRITTEN` | ✅ Yes        | ✅ Yes                 | ❌ No        |
-| `IOMAP_HOLE`   | ❌ No             | ❌ No                  | ❌ No        |
-| `IOMAP_DELALLOC` | ❌ No (in-memory) | 🔶 Logical reservation only | ❌ No |
-| `IOMAP_INLINE` | ✅ Yes (in inode) | ✅ Yes                 | ✅ Yes       |
+| IOMAP Type    | Extents exist? | Disk blocks assigned? | Data valid? | On-disk visible? |
+| ------------- | -------------- | -------------------- | ----------- | ---------------- |
+| `IOMAP_MAPPED`   | ✅ | ✅ | ✅ | ✅ |
+| `IOMAP_UNWRITTEN`| ✅ | ✅ | ❌ | ✅ |
+| `IOMAP_DELALLOC`  | ❌ | ❌ | ❌ | ❌ |
+| `IOMAP_HOLE`      | ❌ | ❌ | ❌ | ❌ |
+| `IOMAP_INLINE`    | ✅ (inode only) | ✅ (inode only) | ✅ | ✅ |
 
 ---
 
-## Real Examples for IOMAP Types
+### How these states arise from user I/O:
 
-### Case 1: Normal Written File
+| User Action | Typical IOMAP State Transition |
+| ----------- | ------------------------------ |
+| Buffered write into hole | Hole → Allocated → `IOMAP_MAPPED` |
+| Buffered write with delayed allocation | Hole → `IOMAP_DELALLOC` |
+| Writeback flush of delalloc region | `IOMAP_DELALLOC` → `IOMAP_MAPPED` |
+| `fallocate()` preallocation | Hole → `IOMAP_UNWRITTEN` |
+| Direct I/O write | `IOMAP_UNWRITTEN` → `IOMAP_MAPPED` (after successful I/O and `iomap_end()`) |
+| Creating small files | Entire file stored as `IOMAP_INLINE` |
 
-```
-File: |=======================|
-Type:   IOMAP_MAPPED
-```
+---
 
-### Case 2: Sparse Hole
+### Unified Visual Diagram
 
-```
-File: |====|.........|====|
-Type:   MAPPED  HOLE   MAPPED
-```
+```text
+File Offset:    |---------|---------|---------|---------|---------|
+Logical Range:   0MB      10MB     20MB      30MB     40MB      50MB
 
-### Case 3: Fallocate (preallocation)
+Region Type:
+[MAPPED] [ HOLE ] [UNWRITTEN] [DELALLOC] [INLINE]
 
-```
-File: |~~~~~~~~~~~~~|
-Type:   IOMAP_UNWRITTEN
-```
+Physical Disk Blocks Allocation:
 
-### Case 4: Buffered Write Delayed Allocation
-
-```
-File: |^^^^^^|
-Type:   IOMAP_DELALLOC
-```
-
+- MAPPED: Extent allocated, disk blocks assigned, valid data present.
+- HOLE: No extents, nothing allocated.
+- UNWRITTEN: Extent allocated, blocks assigned, data not valid yet.
+- DELALLOC: No extents yet, logical reservation exists (in-memory quota & allocator tracking).
+- INLINE: Data stored fully inside inode, no separate extents.
 ---
 
 ## Buffered Write Path Walkthrough
