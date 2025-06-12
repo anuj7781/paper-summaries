@@ -75,22 +75,24 @@ Physical Disk Blocks Allocation:
 - UNWRITTEN: Extent allocated, blocks assigned, data not valid yet.
 - DELALLOC: No extents yet, logical reservation exists (in-memory quota & allocator tracking).
 - INLINE: Data stored fully inside inode, no separate extents.
+
+### Key Notes
+
+- Logical reservation (DELALLOC):
+  - Filesystem reserves free space in-memory for accounting (quota, allocator).
+  - No extents or disk blocks assigned yet.
+  - Actual allocation deferred until writeback.
+
+- UNWRITTEN protects against partial data exposure:
+  - Extents exist, disk blocks allocated.
+  - Used for Direct I/O and fallocate().
+  - Prevents exposure of invalid data if I/O fails partway.
+
+- INLINE stores small files directly inside inode body:
+  - Extremely space-efficient for very tiny files.
+
 ---
 
-## Buffered Write Path Walkthrough
-
-### Scenario
-
-- App issues:
-
-```c
-pwrite(fd, user_buf, 128KB, 4MB);
-```
-
-- Filesystem: XFS (or ext4 with iomap)
-- Assume offset 4MB was previously a hole.
-
----
 
 ### The Full Path:
 
@@ -103,7 +105,8 @@ pwrite(fd, user_buf, 128KB, 4MB);
 
 2️⃣ iomap_iter()
   └ Calls iomap_begin()
-     └ Allocates extents for hole → returns IOMAP_MAPPED
+     └ Either returns mapping of existing extents.
+     └ Or allocates extents (for buffered write into hole) and returns newly mapped region.
 
 3️⃣ iomap_write_iter()
   └ Calls iomap_write_begin()
@@ -205,19 +208,6 @@ vfs_write()
               └ __iomap_write_begin() → prepares folio memory
           └ copy_folio_from_iter_atomic() → copy user data
           └ iomap_write_end() → mark dirty + size update
-```
-
----
-
-## Joanne's Granular Dirty Tracking (for Large Folios)
-
-- For large folios: not every block inside folio may be dirty.
-- Joanne’s patches allow:
-
-```
-- Per-block dirty bitmap tracking inside folio.
-- Writeback can flush only dirty portions.
-- Greatly improves writeback efficiency for huge folios.
 ```
 
 ---
