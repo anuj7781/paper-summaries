@@ -76,7 +76,7 @@ Physical Disk Blocks Allocation:
 - DELALLOC: No extents yet, logical reservation exists (in-memory quota & allocator tracking).
 - INLINE: Data stored fully inside inode, no separate extents.
 
-### Key Notes
+Key Notes
 
 - Logical reservation (DELALLOC):
   - Filesystem reserves free space in-memory for accounting (quota, allocator).
@@ -92,9 +92,7 @@ Physical Disk Blocks Allocation:
   - Extremely space-efficient for very tiny files.
 
 ---
-
-
-### The Full Path:
+The Full Path:
 
 ```
 1️⃣ vfs_write()
@@ -132,8 +130,6 @@ Physical Disk Blocks Allocation:
 
 9️⃣ Background writeback flushes dirty folios via iomap_writepages()
 ```
-
----
 
 ## Page Cache Layout
 
