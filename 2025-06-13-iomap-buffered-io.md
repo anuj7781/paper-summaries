@@ -197,7 +197,7 @@ Index N  -->  Folio (offset N*PAGE_SIZE ...)
 vfs_write()
   └ iomap_file_buffered_write()
       └ iomap_iter()
-          └ iomap_begin() → extent allocation
+          └ iomap_begin() → query FS mapping (may allocate extent in buffered write)
       └ iomap_write_iter()
           └ iomap_write_begin()
               └ __iomap_get_folio() → allocates folio
