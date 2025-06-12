@@ -13,7 +13,6 @@ In this post, we take a detailed walkthrough of how Linux filesystems implement 
 - Full buffered write path
 - Folio interaction and page cache behavior
 - Failure consistency model
-- Dirty tracking with granular large folio support
 
 This blog captures the complete understanding I developed while deep diving into IOMAP internals with lots of questions, examples, and visualizations.
 
@@ -92,9 +91,9 @@ Key Notes
   - Extremely space-efficient for very tiny files.
 
 ---
-The Full Path:
 
-```
+## The Full Path:
+
 1️⃣ vfs_write()
   └ file_operations->write_iter()
      └ xfs_file_write_iter()
