@@ -94,7 +94,7 @@ Key Notes
 ---
 
 ## The Full Path:
-
+```
 1️⃣ vfs_write()
   └ file_operations->write_iter()
      └ xfs_file_write_iter()
@@ -129,7 +129,7 @@ Key Notes
 8️⃣ Write returns to user successfully
 
 9️⃣ Background writeback flushes dirty folios via iomap_writepages()
-
+```
 
 ## Page Cache Layout
 
