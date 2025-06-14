@@ -247,7 +247,3 @@ This optimization is a great example of how subtle correctness and performance i
 - [Brian Foster’s patch series](https://lore.kernel.org/linux-fsdevel/20241119154656.774395-1-bfoster@redhat.com/)
 - [iomap documentation in kernel tree](https://github.com/torvalds/linux/tree/master/fs/iomap)
 
----
-
-*Written after deep-dive analysis and breakdown discussions.*
-
