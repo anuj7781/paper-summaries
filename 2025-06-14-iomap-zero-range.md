@@ -1,4 +1,4 @@
-# Understanding IOMAP Zero-Range : Handling Delalloc, Unwritten Extents, and Brian Foster’s Folio Batch Optimization
+# Understanding IOMAP Zero-Range Handling: Delalloc, Unwritten Extents, and Brian Foster’s Folio Batch Optimization
 
 ## Introduction
 
@@ -162,6 +162,54 @@ Let’s walk a concrete example:
 - Zero-range called on 120–160.
 - Existing kernel flushes dirty folios on 120–140.
 - Brian’s patch locks 120–140 folios, zeroes them directly.
+
+---
+
+## Worked Example: Dirty Folios Overlapping Unwritten Extents
+
+### Setup
+
+- File region: 100–200
+- Preallocated extent: UNWRITTEN
+- Buffered write happens on offset 120–140
+
+### After Buffered Write
+
+| Logical Offset | Extent State |
+| -------------- | ------------ |
+| 100–120        | UNWRITTEN    |
+| 120–140        | WRITTEN      |
+| 140–200        | UNWRITTEN    |
+
+- Dirty folios exist in pagecache for 120–140
+
+### Zero-range Issued
+
+```bash
+fallocate(FALLOC_FL_ZERO_RANGE, offset=100, len=100)
+```
+
+### iomap\_iter() Splits Subranges
+
+| Subrange | iomap->type      |
+| -------- | ---------------- |
+| 100–120  | IOMAP\_UNWRITTEN |
+| 120–140  | IOMAP\_WRITTEN   |
+| 140–200  | IOMAP\_UNWRITTEN |
+
+### Folio States in Pagecache
+
+| Logical Offset | Folio Exists? | Dirty? |
+| -------------- | ------------- | ------ |
+| 100–120        | No            | N/A    |
+| 120–140        | Yes           | Dirty  |
+| 140–200        | No            | N/A    |
+
+### Brian's Patch Behavior
+
+- 100–120: zero directly (no folios)
+- 120–140: zero dirty folios directly in-place
+- 140–200: zero directly (no folios)
 
 ---
 
