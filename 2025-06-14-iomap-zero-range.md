@@ -1,4 +1,4 @@
-# Understanding IOMAP Zero-Range Handling: Delalloc, Unwritten Extents, and Brian Foster’s Folio Batch Optimization
+# Understanding IOMAP Zero-Range : Handling Delalloc, Unwritten Extents, and Brian Foster’s Folio Batch Optimization
 
 ## Introduction
 
