@@ -213,14 +213,14 @@ fallocate(FALLOC_FL_ZERO_RANGE, offset=100, len=100)
 
 ---
 
-## When Does Extent State Change?
+### 🧠 Extent State Transitions in Buffered I/O
 
-| Operation                            | Extent State Transition?                                  |
-| ------------------------------------ | --------------------------------------------------------- |
-| Hole write                           | At writeback                                              |
-| Buffered write into unwritten extent | At write time                                             |
-| Writeback                            | ❌ No extent state change                                  |
-| Zero-range                           | ❌ No extent state change (unless hole allocation happens) |
+| Operation                            | IOMAP Type Seen           | Extent State Transition? | When Does It Happen?             |
+|-------------------------------------|----------------------------|---------------------------|----------------------------------|
+| Hole write                           | `IOMAP_DELALLOC`           | ✅ Yes                    | During writeback                 |
+| Buffered write into unwritten extent| `IOMAP_UNWRITTEN`          | ✅ Yes                    | At write time (`iomap_end()`)    |
+| Writeback of already written extent | `IOMAP_MAPPED`             | ❌ No                     | —                                |
+| Zero-range into a hole              | `IOMAP_HOLE` or `DELALLOC` | ✅ Maybe                  | If allocation is triggered       |
 
 ---
 
