@@ -24,12 +24,22 @@ This material is inspired by Brian Foster’s RFC patch series:
 | ------------- | ---------------------------------------------------------- |
 | `iomap->type` | Returned by `iomap_begin()`                                |
 | `br_state`    | Filesystem extent state (XFS extent tree)                  |
-| DELALLOC      | Delayed allocation: logical reservation, no physical block |
-| UNWRITTEN     | Physical blocks allocated, data not yet valid              |
-| WRITTEN       | Physical blocks allocated, valid data                      |
 | Folio         | Unit of memory inside pagecache                            |
 
 ---
+### 📦 All Possible `iomap->type` Values
+
+| IOMAP Type        | Description                                                                 |
+|-------------------|-----------------------------------------------------------------------------|
+| `IOMAP_HOLE`       | No extent and no data. Read returns zero. Write will trigger allocation.   |
+| `IOMAP_DELALLOC`   | Delayed allocation: logical reservation exists, no physical extent yet.    |
+| `IOMAP_UNWRITTEN`  | Physical extent reserved but not yet marked written (e.g., after fallocate).|
+| `IOMAP_MAPPED`     | Extent is allocated and holds valid data.                                  |
+| `IOMAP_INLINE`     | Data is stored inline within the inode (for small files).                  |
+| `IOMAP_DAX`        | Direct Access (DAX) region — bypasses page cache.                          |
+| `IOMAP_PAGE_IO`    | Used internally for page-level writeback in FUSE or non-block setups.      |
+
+```
 
 ## Buffered Write: Two Scenarios
 
