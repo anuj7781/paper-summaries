@@ -36,10 +36,8 @@ This material is inspired by Brian Foster’s RFC patch series:
 | `IOMAP_UNWRITTEN`  | Physical extent reserved but not yet marked written (e.g., after fallocate).|
 | `IOMAP_MAPPED`     | Extent is allocated and holds valid data.                                  |
 | `IOMAP_INLINE`     | Data is stored inline within the inode (for small files).                  |
-| `IOMAP_DAX`        | Direct Access (DAX) region — bypasses page cache.                          |
-| `IOMAP_PAGE_IO`    | Used internally for page-level writeback in FUSE or non-block setups.      |
 
-```
+---
 
 ## Buffered Write: Two Scenarios
 
